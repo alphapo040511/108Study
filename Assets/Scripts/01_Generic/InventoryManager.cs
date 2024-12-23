@@ -9,6 +9,10 @@ public class InventoryManager : MonoBehaviour
     public Inventory<Weapon> weaponInventory;
     public Inventory<Potion> potionInventory;
 
+    public System.Action OnItemAdded;
+    public System.Action OnItemRemoved;
+
+
     private void Awake()
     {
         if (instance == null)
@@ -45,6 +49,19 @@ public class InventoryManager : MonoBehaviour
     public void PotionRemove()
     {
         potionInventory.RemoveItem((Potion)ItemDatabase.instance.itemList["POTION_001"], 1);
+    }
+
+    public void RemoveItem(Item item, int count = 1)
+    {
+        switch(item)
+        {
+            case Weapon:
+                weaponInventory.RemoveItem((Weapon)item, count);
+                break;
+            case Potion:
+                potionInventory.RemoveItem((Potion)item, count);
+                break;
+        }
     }
 
     public void CheckInventory()

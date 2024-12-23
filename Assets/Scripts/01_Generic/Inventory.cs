@@ -5,7 +5,9 @@ using UnityEngine;
 public class Inventory<T> : MonoBehaviour where T : Item
 {
     private int maxCapacity = 16;
-    private List<T> items = new List<T>();
+    public List<T> items = new List<T>();
+
+    public event System.Action OnItemRemoved;
 
     public bool AddItem(T item, int count = 1)
     {
@@ -20,15 +22,16 @@ public class Inventory<T> : MonoBehaviour where T : Item
         if (targetItem != null)
         {
             targetItem.currentQuantity += count;
-
             if (targetItem.currentQuantity >= targetItem.maxQuantity)
             {
                 Debug.Log("이 아이템은 더 이상 소지할 수 없습니다.");
                 targetItem.currentQuantity = targetItem.maxQuantity;
+                InventoryManager.instance.OnItemAdded?.Invoke();
                 return false;
             }
             else
             {
+                InventoryManager.instance.OnItemAdded?.Invoke();
                 return true;
             }
         }
@@ -45,7 +48,8 @@ public class Inventory<T> : MonoBehaviour where T : Item
         if (targetItem != null)
         {
             targetItem.currentQuantity -= count;
-            if(targetItem.currentQuantity <= 0)
+            InventoryManager.instance.OnItemRemoved?.Invoke();
+            if (targetItem.currentQuantity <= 0)
             {
                 return RemoveAllItem(item);
             }
@@ -58,6 +62,7 @@ public class Inventory<T> : MonoBehaviour where T : Item
     {
         if(items.Remove(item))
         {
+            InventoryManager.instance.OnItemRemoved?.Invoke();
             return true;
         }
         return false;
