@@ -7,9 +7,7 @@ public class Inventory<T> : MonoBehaviour where T : Item
     private int maxCapacity = 16;
     public List<T> items = new List<T>();
 
-    public event System.Action OnItemRemoved;
-
-    public bool AddItem(T item, int count = 1)
+    public bool AddItem(T item, int count)
     {
         if(items.Count >= maxCapacity)
         {
@@ -36,9 +34,25 @@ public class Inventory<T> : MonoBehaviour where T : Item
             }
         }
 
-        item.currentQuantity = count;
-        items.Add(item);
-        return true;
+         int id = InventoryPopup.Instance.firstSlotID();
+             // 여기 나중에 수정
+           
+        if (id >= 0)
+        {
+            if (item.slotID < 0)
+            {
+                item.slotID = id;
+            }
+            item.currentQuantity = count;
+            items.Add(item);
+            InventoryManager.instance.OnItemAdded?.Invoke();
+            return true;
+        }
+        else
+        {
+            InventoryManager.instance.OnItemAdded?.Invoke();
+            return false;
+        }
     }
 
     public bool RemoveItem(T item, int count = 1)

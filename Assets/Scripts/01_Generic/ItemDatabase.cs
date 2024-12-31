@@ -26,10 +26,10 @@ public class ItemDatabase : MonoBehaviour
         LoadItemData();
     }
 
-    private void LoadItemData()
+    public void LoadItemData()
     {
         Item[] items = Resources.LoadAll<Item>("Items");
-
+        itemList = new Dictionary<string, Item>();
         foreach (Item item in items)
         {
             itemList.Add(item.itemIndex, item);

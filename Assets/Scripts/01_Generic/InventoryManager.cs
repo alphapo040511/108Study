@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -30,25 +31,19 @@ public class InventoryManager : MonoBehaviour
     {
         weaponInventory = new Inventory<Weapon>();
         potionInventory = new Inventory<Potion>();
-        TestItem();
     }
 
-    private void TestItem()
+    public void AddItem(Item item, int count = 1)
     {
-        weaponInventory.AddItem((Weapon)ItemDatabase.instance.itemList["WEAPON_001"], 1);
-        potionInventory.AddItem((Potion)ItemDatabase.instance.itemList["POTION_001"], 3);
-        potionInventory.AddItem((Potion)ItemDatabase.instance.itemList["POTION_002"], 2);
-        potionInventory.AddItem((Potion)ItemDatabase.instance.itemList["POTION_003"], 1);
-    }
-
-    public void PotionAdd()
-    {
-        potionInventory.AddItem((Potion)ItemDatabase.instance.itemList["POTION_001"], 10);
-    }
-
-    public void PotionRemove()
-    {
-        potionInventory.RemoveItem((Potion)ItemDatabase.instance.itemList["POTION_001"], 1);
+        switch (item)
+        {
+            case Weapon:
+                weaponInventory.AddItem((Weapon)item, count);
+                break;
+            case Potion:
+                potionInventory.AddItem((Potion)item, count);
+                break;
+        }
     }
 
     public void RemoveItem(Item item, int count = 1)
@@ -64,25 +59,87 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void CheckInventory()
-    {
-        List<Weapon> weaponList = weaponInventory.FindAllItem(item => item.itemIndex != "");
-        Debug.Log("-----무기 인벤토리-----");
-        foreach(Weapon weapon in weaponList)
-        {
-            Debug.Log($"{weapon.itemName} : {weapon.currentQuantity}개 보유중");
-        }
-        Debug.Log("-----------------------");
 
-        List<Potion> potionList= potionInventory.FindAllItem(item => item.itemIndex != "");
-        Debug.Log("-----포션 인벤토리-----");
-        foreach (Potion potion in potionList)
-        {
-            Debug.Log($"{potion.itemName} : {potion.currentQuantity}개 보유중");
-        }
-        Debug.Log("-----------------------");
+    public void SaveInventory()
+    {
+        StartCoroutine(ItemToItemData());
     }
 
+    private IEnumerator ItemToItemData()
+    {
+        List<ItemData> items = new List<ItemData>();
 
-    //데이터 저장 불러오기 추가??
+        foreach (Item item in weaponInventory.items)
+        {
+            ItemData data = new ItemData();
+            data.itemIndex = item.itemIndex;
+            data.currentQuantity = item.currentQuantity;
+            data.slotID = item.slotID;
+            items.Add(data);
+            yield return null;
+        }
+
+        foreach (Item item in potionInventory.items)
+        {
+            ItemData data = new ItemData();
+            data.itemIndex = item.itemIndex;
+            data.currentQuantity = item.currentQuantity;
+            data.slotID = item.slotID;
+            items.Add(data);
+            yield return null;
+        }
+
+        SaveToJson(items);
+    }
+
+    private void SaveToJson(List<ItemData> dataList)
+    {
+        ItemDataList temp = new ItemDataList();
+        temp.items = dataList;
+        string jsonData = JsonUtility.ToJson(temp);
+        System.IO.File.WriteAllText(Application.dataPath + "/inventory.json", jsonData);
+        Debug.Log("저장 완료");
+    }
+
+    public void LoadInventory()
+    {
+        string path = Application.dataPath + "/inventory.json";
+
+        if (System.IO.File.Exists(path))
+        {
+            string json = System.IO.File.ReadAllText(path);
+            ItemDataList dataList = JsonUtility.FromJson<ItemDataList>(json);
+            StartCoroutine(ItemDataToItem(dataList.items));
+        }
+    }
+
+    private IEnumerator ItemDataToItem(List<ItemData> dataList)
+    {
+        ItemDatabase.instance.LoadItemData();
+
+        foreach (ItemData item in dataList)
+        {
+            Item targetItem = ItemDatabase.instance.itemList[item.itemIndex];
+            targetItem.currentQuantity = item.currentQuantity;
+            targetItem.slotID = item.slotID;
+
+            AddItem(targetItem, item.currentQuantity);
+            yield return null;
+        }
+    }
+}
+
+
+[System.Serializable]
+public class ItemDataList
+{
+    public List<ItemData> items;
+}
+
+[System.Serializable]
+public class ItemData
+{
+    public string itemIndex;
+    public int currentQuantity;
+    public int slotID;
 }

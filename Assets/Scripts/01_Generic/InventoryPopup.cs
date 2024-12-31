@@ -4,39 +4,70 @@ using UnityEngine;
 
 public class InventoryPopup : MonoBehaviour
 {
-    public GameObject itemSlotPrefab;
+    public static InventoryPopup Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public GameObject inventoryPopup;
 
+    public GameObject itemIconPrefab;
+
+    public Transform topCanvas;
+
     void Start()
     {
-        
+        UpdateInventory();
+        InventoryManager.instance.OnItemAdded += UpdateInventory;
     }
 
-    private void UpdateInventory()
+    public void UpdateInventory()
     {
-        foreach(Transform obj in inventoryPopup.transform)
+        List<Item> items = new List<Item>();
+
+        items.AddRange(InventoryManager.instance.weaponInventory.items);
+        items.AddRange(InventoryManager.instance.potionInventory.items);
+
+        InventorySet(items);
+    }
+
+
+    private void InventorySet(List<Item> items)
+    {
+        foreach (Transform obj in inventoryPopup.transform)
         {
-            Destroy(obj.gameObject);
+            if (obj.childCount > 0)
+            {
+                Destroy(obj.GetChild(0).gameObject);
+            }
         }
 
-        foreach(var item in InventoryManager.instance.weaponInventory.items)
+        for(int i = 0; i < items.Count; i++)
         {
-            GameObject temp = Instantiate(itemSlotPrefab, inventoryPopup.transform);
-            ItemSlot slot = temp.GetComponent<ItemSlot>();
-            slot.AddItem(item);
-            InventoryManager.instance.OnItemAdded += slot.OnAddItem;
-            InventoryManager.instance.OnItemRemoved += slot.UseItem;
+            GameObject temp = Instantiate(itemIconPrefab, inventoryPopup.transform.GetChild(items[i].slotID));
+            temp.GetComponent<ItemIcon>().Init(items[i]);
+            temp.GetComponent<IconDrag>().onDragParent = topCanvas;
+        }
+    }
+
+    public int firstSlotID()        //슬롯 생성시 인벤토리 최대 크기에 맞춰 생성
+    {
+        int slotID = 0;
+        foreach (Transform obj in inventoryPopup.transform)
+        {
+            if (obj.childCount <= 0)
+            {
+                return slotID;
+            }
+            else
+            {
+                slotID++;
+            }
         }
 
-        foreach (var item in InventoryManager.instance.potionInventory.items)
-        {
-            GameObject temp = Instantiate(itemSlotPrefab, inventoryPopup.transform);
-            ItemSlot slot = temp.GetComponent<ItemSlot>();
-            slot.AddItem(item);
-            InventoryManager.instance.OnItemAdded += slot.OnAddItem;
-            InventoryManager.instance.OnItemRemoved += slot.UseItem;
-        }
+        return -1;
     }
 
     public void OnClick()
@@ -51,11 +82,9 @@ public class InventoryPopup : MonoBehaviour
         }
     }
 
-
     void ShowInventory()
     {
         inventoryPopup.SetActive(true);
-        UpdateInventory();
     }
 
     void HideInventory()

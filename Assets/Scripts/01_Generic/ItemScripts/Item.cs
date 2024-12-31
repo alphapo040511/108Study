@@ -10,6 +10,7 @@ public abstract class Item : MonoBehaviour
     public Sprite icon;
     public int maxQuantity = 64;
     public int currentQuantity;
+    public int slotID = -1;
 
     public abstract void Use();
 }
