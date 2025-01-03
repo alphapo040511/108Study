@@ -12,7 +12,7 @@ public class InventoryPopup : MonoBehaviour
     }
 
     public GameObject inventoryPopup;
-
+    public GameObject creaftingPopup;
     public GameObject itemIconPrefab;
 
     public Transform topCanvas;
@@ -36,23 +36,20 @@ public class InventoryPopup : MonoBehaviour
 
     private void InventorySet(List<Item> items)
     {
-        foreach (Transform obj in inventoryPopup.transform)
-        {
-            if (obj.childCount > 0)
-            {
-                Destroy(obj.GetChild(0).gameObject);
-            }
-        }
+        InventoryClear();
 
-        for(int i = 0; i < items.Count; i++)
+        for (int i = 0; i < items.Count; i++)
         {
-            GameObject temp = Instantiate(itemIconPrefab, inventoryPopup.transform.GetChild(items[i].slotID));
-            temp.GetComponent<ItemIcon>().Init(items[i]);
-            temp.GetComponent<IconDrag>().onDragParent = topCanvas;
+            if (items[i].slotID != -1)
+            {
+                GameObject temp = Instantiate(itemIconPrefab, inventoryPopup.transform.GetChild(items[i].slotID));
+                temp.GetComponent<ItemIcon>().Init(items[i]);
+                temp.GetComponent<IconDrag>().onDragParent = topCanvas;
+            }
         }
     }
 
-    public int firstSlotID()        //슬롯 생성시 인벤토리 최대 크기에 맞춰 생성
+    public int firstSlotID()        //슬롯 생성시 인벤토리 최대 크기에 맞춰 생성 (추가 안함)
     {
         int slotID = 0;
         foreach (Transform obj in inventoryPopup.transform)
@@ -70,25 +67,15 @@ public class InventoryPopup : MonoBehaviour
         return -1;
     }
 
-    public void OnClick()
+    public void InventoryClear()
     {
-        if(inventoryPopup.activeSelf)
+        foreach (Transform obj in inventoryPopup.transform)
         {
-            HideInventory();
-        }
-        else
-        {
-            ShowInventory();
+            if (obj.childCount > 0)
+            {
+                Destroy(obj.GetChild(0).gameObject);
+            }
         }
     }
 
-    void ShowInventory()
-    {
-        inventoryPopup.SetActive(true);
-    }
-
-    void HideInventory()
-    {
-        inventoryPopup.SetActive(false);
-    }
 }

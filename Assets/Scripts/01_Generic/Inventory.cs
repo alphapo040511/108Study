@@ -82,6 +82,11 @@ public class Inventory<T> : MonoBehaviour where T : Item
         return false;
     }
 
+    public void InventoryClear()
+    {
+        items.Clear();
+    }
+
     public T FindItem(System.Predicate<T> predicate)
     {
         return items.Find(predicate);

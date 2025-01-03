@@ -59,6 +59,13 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void InventoryClear()
+    {
+        weaponInventory.InventoryClear();
+        potionInventory.InventoryClear();
+        InventoryPopup.Instance.InventoryClear();
+    }
+
 
     public void SaveInventory()
     {
@@ -115,6 +122,7 @@ public class InventoryManager : MonoBehaviour
 
     private IEnumerator ItemDataToItem(List<ItemData> dataList)
     {
+        InventoryClear();
         ItemDatabase.instance.LoadItemData();
 
         foreach (ItemData item in dataList)
