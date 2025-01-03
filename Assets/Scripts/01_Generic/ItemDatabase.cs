@@ -32,6 +32,7 @@ public class ItemDatabase : MonoBehaviour
         itemList = new Dictionary<string, Item>();
         foreach (Item item in items)
         {
+            item.currentQuantity = 0;
             itemList.Add(item.itemIndex, item);
         }
     }

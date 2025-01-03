@@ -6,7 +6,7 @@ public abstract class Item : MonoBehaviour
 {
     public string itemIndex;
     public string itemName;
-    public string description;
+    [TextArea]public string description;
     public Sprite icon;
     public int maxQuantity = 64;
     public int currentQuantity;

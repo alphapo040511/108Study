@@ -45,10 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemIndex: WEAPON_003
-  itemName: Double Sword
-  description: jjang ssem
+  itemName: "\uC30D\uAC80"
+  description: "\uC30D\uAC80\uC740\uC694\uC9F1\uC9F1\uC314\uAD6C\uC694\uACF5\uC18D\uB3C4\uBE60\uB974\uACE0\uC694\uC774\uC18D\uB3C4\uC99D\uAC00\uD558\uB294\uB370\uC18C\uACBD\uC9C1\uC800\uD56D\uB3C4\uB2EC\uB838\uACE0\uC694\uD68C\uD53C\uC131\uB2A5\uB3C4\uB298\uC5B4\uB098\uB294\uB300\uB2E4\uAC00\uD68C\uD53C\uB3C4\uC2A4\uD15D\uBC1F\uAD6C\uC694\uC544\uBB34\uD2BC\uC9F1\uC9F1\uC35C"
   icon: {fileID: 0}
   maxQuantity: 1
   currentQuantity: 0
+  slotID: 0
   damage: 4
   range: 5

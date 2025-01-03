@@ -45,9 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemIndex: POTION_002
-  itemName: Blue Potion
-  description: Hummm...
+  itemName: "\uD30C\uB791\uD3EC\uC158"
+  description: "\uD30C\uB791\uD45C\uC158\uC774\uC5D0\uC694. \uB9DB\uC740 \uC5C6\uC5B4
+    \uBCF4\uC774\uB124\uC694."
   icon: {fileID: 0}
   maxQuantity: 64
   currentQuantity: 0
+  slotID: 6
   healAmount: 30

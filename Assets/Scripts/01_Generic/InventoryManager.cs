@@ -120,7 +120,6 @@ public class InventoryManager : MonoBehaviour
         foreach (ItemData item in dataList)
         {
             Item targetItem = ItemDatabase.instance.itemList[item.itemIndex];
-            targetItem.currentQuantity = item.currentQuantity;
             targetItem.slotID = item.slotID;
 
             AddItem(targetItem, item.currentQuantity);

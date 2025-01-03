@@ -45,10 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemIndex: WEAPON_002
-  itemName: Kunai
-  description: Kunai desu
+  itemName: "\uC218\uB9AC\uAC80"
+  description: "\uC218\uB9AC\uAC80\uC774\uC5D0\uC694.."
   icon: {fileID: 0}
   maxQuantity: 64
-  currentQuantity: 0
+  currentQuantity: 36
+  slotID: 8
   damage: 7
   range: 50

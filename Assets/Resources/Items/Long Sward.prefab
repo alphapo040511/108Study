@@ -45,10 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemIndex: WEAPON_001
-  itemName: Long Sword
-  description: LOOOOOOOOOOOONG
+  itemName: "\uB871\uC18C\uB4DC"
+  description: "\uD06C\uACE0 \uAC15\uB825\uD55C \uB871\uC18C\uB4DC \uC785\uB2C8\uB2F9~"
   icon: {fileID: 0}
   maxQuantity: 1
-  currentQuantity: 0
+  currentQuantity: 1
+  slotID: 0
   damage: 20
   range: 10
